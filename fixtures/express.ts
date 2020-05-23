@@ -8,7 +8,7 @@ import * as expressive from "https://raw.githubusercontent.com/NMathar/deno-expr
   app.use(expressive.bodyParser.json());
 
   app.get('/', async (req, res) => {
-    res.json({foo: "bar"})
+    res.json({foo: "baz"})
   })
 
   const server = await app.listen(port);

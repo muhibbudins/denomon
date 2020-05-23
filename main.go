@@ -23,6 +23,44 @@ func help() {
 	fmt.Println("Use --allow-net etc. sequentially after file name")
 }
 
+var pid int = 0
+var command exec.Cmd
+
+func build(path string) bool {
+	color.Green("[denomon] build: %s", path)
+
+	if pid > 0 {
+		command.Process.Kill()
+	}
+
+	var stderr bytes.Buffer
+
+	options := []string{"run", path}
+
+	if len(flag.Args()) > 1 {
+		options = []string{"run"}
+		options = append(options, flag.Args()[1:]...)
+		options = append(options, path)
+	}
+
+	cmd := exec.Command("deno", options...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	fmt.Print("\033[s")
+	fmt.Print(cmd.Stdout)
+	fmt.Print("\033[u\033[K")
+
+	if err := cmd.Start(); err != nil {
+		color.Red("[denomon] error: %s", fmt.Sprint(err)+": "+stderr.String())
+	}
+
+	pid = cmd.Process.Pid
+	command = *cmd
+
+	return false
+}
+
 func main() {
 	dir, err := os.Getwd()
 
@@ -73,30 +111,13 @@ func main() {
 				}
 
 				if event.Op&fsnotify.Write == fsnotify.Write {
-					color.Green("[denomon] build: %s", event.Name)
+					repeat := build(event.Name)
 
-					var stderr bytes.Buffer
-
-					options := []string{"run", event.Name}
-
-					if len(flag.Args()) > 1 {
-						options = []string{"run"}
-						options = append(options, flag.Args()[1:]...)
-						options = append(options, event.Name)
-					}
-
-					cmd := exec.Command("deno", options...)
-					cmd.Stdout = os.Stdout
-					cmd.Stderr = os.Stderr
-					fmt.Println(cmd.Stdout)
-
-					err := cmd.Run()
-
-					if err != nil {
-						color.Red("[denomon] error: %s", fmt.Sprint(err)+": "+stderr.String())
+					if repeat {
+						build(event.Name)
 					}
 				}
-			case err, ok := <-watcher.Errors:
+			case _, ok := <-watcher.Errors:
 				if !ok {
 					return
 				}
@@ -106,8 +127,7 @@ func main() {
 		}
 	}()
 
-	err = watcher.Add(directory)
-	if err != nil {
+	if err = watcher.Add(directory); err != nil {
 		color.Red("[denomon] error: %s", err.Error())
 		os.Exit(1)
 	}
