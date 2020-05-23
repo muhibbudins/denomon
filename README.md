@@ -19,7 +19,7 @@ Move the denomon binary into **/usr/bin** or **/usr/local/bin**
 
 ```bash
 $ mv denomon /usr/local/bin
-``
+```
 
 Make it executable
 
