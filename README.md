@@ -22,7 +22,7 @@ $ curl -LJO https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
 Move the denomon binary into **/usr/bin** or **/usr/local/bin**
 
 ```bash
-$ mv denomon /usr/local/bin
+$ sudo mv denomon /usr/local/bin
 ```
 
 Make it executable
@@ -40,10 +40,13 @@ $ denomon <options> <file>
 Example
 
 ```bash
-$ denomon --dir fixtures --allow net express.ts
-or
-$ denomon --allow net fixtures/express.ts
-or
+# spawn folder but direct to files with permission of net & read
+$ denomon --dir fixtures --allow net,read server.ts
+# spawn folder with permission of net & read
+$ denomon --dir fixtures --allow net,read
+# spawn file with permission of net
+$ denomon --allow net fixtures/server.ts
+# spawn file without any permission
 $ denomon fixtures/mod.ts
 ```
 
@@ -55,7 +58,7 @@ To set target directory
 
 #### --allow
 
-To set allowed permission
+To set allowed permission, comma sepearated
 
 ### Features
 
@@ -71,4 +74,4 @@ Refer to this [issue](https://github.com/fsnotify/fsnotify/issues/18), currently
 
 ### License
 
-This project under MIT License
+This project is under MIT License

@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
@@ -16,8 +17,8 @@ var pid int = 0
 var command exec.Cmd
 var args []string
 var file string = ""
-var directory string = ""
-var permission permissionFlag
+var path string = ""
+var permission []string
 
 func help() {
 	fmt.Printf("[DENOMON HELP]\n\n")
@@ -29,8 +30,8 @@ func help() {
 	fmt.Printf("--allow Assign permission for the files\n\n")
 }
 
-func build(path string) bool {
-	color.Green("[denomon] build: %s", path)
+func build(file string) bool {
+	color.Green("[denomon] build: %s", file)
 
 	if pid > 0 {
 		command.Process.Kill()
@@ -38,14 +39,14 @@ func build(path string) bool {
 
 	var stderr bytes.Buffer
 
-	options := []string{"run", path}
+	options := []string{"run", file}
 
 	if len(permission) > 0 {
 		options = []string{"run"}
 		for i := 0; i < len(permission); i++ {
 			options = append(options, "--allow-"+permission[i])
 		}
-		options = append(options, path)
+		options = append(options, file)
 	}
 
 	cmd := exec.Command("deno", options...)
@@ -66,17 +67,6 @@ func build(path string) bool {
 	return false
 }
 
-type permissionFlag []string
-
-func (i *permissionFlag) String() string {
-	return "my string representation"
-}
-
-func (i *permissionFlag) Set(value string) error {
-	*i = append(*i, value)
-	return nil
-}
-
 func main() {
 	dir, err := os.Getwd()
 
@@ -84,11 +74,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	flag.Var(&permission, "allow", "Some description for this param.")
-	dirPtr := flag.String("dir", ".", "Directory assignment")
-	helpPtr := flag.Bool("help", false, "Help message")
+	dirPtr := flag.String("dir", ".", "Assign directory to watch")
+	helpPtr := flag.Bool("help", false, "Print this help message")
+	allowPtr := flag.String("allow", "", "Assign permission for the files")
 
 	flag.Parse()
+
+	if *allowPtr != "" {
+		allowSlice := strings.Split(*allowPtr, ",")
+
+		for i := range allowSlice {
+			allowSlice[i] = strings.TrimSpace(allowSlice[i])
+		}
+
+		permission = allowSlice
+	}
 
 	args = flag.Args()
 
@@ -102,13 +102,13 @@ func main() {
 	}
 
 	if file != "" {
-		directory = dir + "/" + *dirPtr + "/" + file
-		build(directory)
+		path = dir + "/" + *dirPtr + "/" + file
+		build(path)
 	} else {
-		directory = dir + "/" + *dirPtr
+		path = dir + "/" + *dirPtr
 	}
 
-	color.Cyan("[denomon] watching: %s", directory)
+	color.Cyan("[denomon] watching: %s", path)
 
 	watcher, err := fsnotify.NewWatcher()
 
@@ -144,7 +144,7 @@ func main() {
 		}
 	}()
 
-	if err = watcher.Add(directory); err != nil {
+	if err = watcher.Add(path); err != nil {
 		color.Red("[denomon] error: %s", err.Error())
 		os.Exit(1)
 	}
