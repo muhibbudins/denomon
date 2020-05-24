@@ -1,4 +1,4 @@
-# [WIP] Denomon
+# Denomon
 
 Simple watcher file for build an application using deno
 
