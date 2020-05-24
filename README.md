@@ -42,7 +42,7 @@ Example
 ```bash
 $ denomon --dir fixtures --allow net express.ts
 or
-$ denomon --allow net fixtures/express.ts
+$ denomon --allow net --allow read fixtures/express.ts
 or
 $ denomon fixtures/mod.ts
 ```
