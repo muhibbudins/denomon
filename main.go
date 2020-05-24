@@ -12,6 +12,13 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
+var pid int = 0
+var command exec.Cmd
+var args []string
+var file string = ""
+var directory string = ""
+var permission permissionFlag
+
 func help() {
 	fmt.Println("[DENOMON HELP]")
 	fmt.Println("Usage:")
@@ -22,9 +29,6 @@ func help() {
 	fmt.Println("Allowed Permision:")
 	fmt.Println("Use --allow-net etc. sequentially after file name")
 }
-
-var pid int = 0
-var command exec.Cmd
 
 func build(path string) bool {
 	color.Green("[denomon] build: %s", path)
@@ -37,9 +41,11 @@ func build(path string) bool {
 
 	options := []string{"run", path}
 
-	if len(flag.Args()) > 1 {
+	if len(permission) > 0 {
 		options = []string{"run"}
-		options = append(options, flag.Args()[1:]...)
+		for i := 0; i < len(permission); i++ {
+			options = append(options, "--allow-"+permission[i])
+		}
 		options = append(options, path)
 	}
 
@@ -61,6 +67,17 @@ func build(path string) bool {
 	return false
 }
 
+type permissionFlag []string
+
+func (i *permissionFlag) String() string {
+	return "my string representation"
+}
+
+func (i *permissionFlag) Set(value string) error {
+	*i = append(*i, value)
+	return nil
+}
+
 func main() {
 	dir, err := os.Getwd()
 
@@ -68,21 +85,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var file string = ""
-	var directory string = ""
-
-	dirPtr := flag.String("d", ".", "Directory assignment")
-	helpPtr := flag.Bool("h", false, "Help message")
+	flag.Var(&permission, "allow", "Some description for this param.")
+	dirPtr := flag.String("dir", ".", "Directory assignment")
+	helpPtr := flag.Bool("help", false, "Help message")
 
 	flag.Parse()
 
-	if (len(flag.Args()) == 0 && *dirPtr == ".") || *helpPtr == true {
+	args = flag.Args()
+
+	if (len(args) == 0 && *dirPtr == ".") || *helpPtr == true {
 		help()
 		return
 	}
 
-	if len(flag.Args()) > 0 {
-		file = flag.Args()[0]
+	if len(args) > 0 {
+		file = args[0]
 	}
 
 	if file != "" {

@@ -30,12 +30,28 @@ $ sudo chmod +x /usr/local/bin/denomon
 ### Usage
 
 ```bash
-$ denomon <options> <file> <allowed-permission>
+$ denomon <options> <file>
+```
+
+Example
+
+```bash
+$ denomon --dir fixtures --allow net express.ts
+or
+$ denomon --allow net fixtures/express.ts
+or
+$ denomon fixtures/mod.ts
 ```
 
 ### Options
 
-TODO
+#### --dir
+
+To set target directory
+
+#### --allow
+
+To set allowed permission
 
 ### Features
 
