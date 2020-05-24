@@ -4,17 +4,19 @@ Simple watcher file for build an application using deno
 
 [![asciicast](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy.png)](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy)
 
+> Note : The pointer printed only on asciinema, but not on the bash / zsh
+
 ### Installation
 
 Download Wget
 
 ```bash
-$ wget https://raw.githubusercontent.com/muhibbudins/denomon/denomon
+$ wget -O denomon https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
 ```
 
 or, CURL
 ```bash
-$ curl https://raw.githubusercontent.com/muhibbudins/denomon/denomon
+$ curl -LJO https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
 ```
 
 Move the denomon binary into **/usr/bin** or **/usr/local/bin**
