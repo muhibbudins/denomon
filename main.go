@@ -20,14 +20,13 @@ var directory string = ""
 var permission permissionFlag
 
 func help() {
-	fmt.Println("[DENOMON HELP]")
-	fmt.Println("Usage:")
-	fmt.Println("denomon <options> <file> <allowed-permission>")
-	fmt.Println("Options:")
-	fmt.Println("-h Show this help message")
-	fmt.Println("-d Assign a directory")
-	fmt.Println("Allowed Permision:")
-	fmt.Println("Use --allow-net etc. sequentially after file name")
+	fmt.Printf("[DENOMON HELP]\n\n")
+	fmt.Printf("Usage:\n\n")
+	fmt.Printf("denomon <options> <file>\n\n")
+	fmt.Printf("Options:\n\n")
+	fmt.Printf("--help Print this help message\n")
+	fmt.Printf("--dir Assign directory to watch\n")
+	fmt.Printf("--allow Assign permission for the files\n\n")
 }
 
 func build(path string) bool {
@@ -104,6 +103,7 @@ func main() {
 
 	if file != "" {
 		directory = dir + "/" + *dirPtr + "/" + file
+		build(directory)
 	} else {
 		directory = dir + "/" + *dirPtr
 	}

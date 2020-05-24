@@ -2,6 +2,8 @@
 
 Simple watcher file for build an application using deno
 
+[![asciicast](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy.png)](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy)
+
 ### Installation
 
 Download Wget
@@ -55,11 +57,15 @@ To set allowed permission
 
 ### Features
 
-TODO
+- Auto build for single file
+- Watching all files in folder
+- Auto reload build for child process (ie. net)
 
 ### Limitations
 
-TODO
+#### --dir
+
+Refer to this [issue](https://github.com/fsnotify/fsnotify/issues/18), currently this tools only can watch file in one folder. But not recursively.
 
 ### License
 
