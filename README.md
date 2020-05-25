@@ -33,7 +33,7 @@ Example:
 denomon --help
 ```
 
-- Single command to spawn current folder (but not recursively [see limitation](https://github.com/muhibbudins/denomon#limitations).)
+- Single command to spawn current folder recursively
 
 ```bash
 $ denomon
@@ -68,7 +68,7 @@ Showing denomon version
 
 #### --help
 
-Print this help message
+Showing help message
 
 #### --dir
 
@@ -81,14 +81,8 @@ Assign permission for the files
 ### Features
 
 - Auto build for single file
-- Watching all files in folder
+- Watching all files in folder recursively
 - Auto reload build for child process (ie. net)
-
-### Limitations
-
-#### --dir
-
-Refer to this [issue](https://github.com/fsnotify/fsnotify/issues/18), currently this tools only can watch file in one folder. But not recursively.
 
 ### License
 

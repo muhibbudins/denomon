@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
-	"github.com/fsnotify/fsnotify"
+	"github.com/radovskyb/watcher"
 )
 
 var pid int = 0
@@ -74,7 +74,7 @@ func main() {
 	dir, err := os.Getwd()
 
 	if err != nil {
-		log.Fatal(err)
+		color.Red("[denomon] error: %s", err.Error())
 	}
 
 	dirPtr := flag.String("dir", "", "Assign directory to watch")
@@ -97,7 +97,7 @@ func main() {
 	args = flag.Args()
 
 	if *versionPtr == true {
-		color.Green("[denomon] version %s", "0.1.0")
+		color.Green("[denomon] version %s", "0.1.1")
 		return
 	}
 
@@ -125,51 +125,39 @@ func main() {
 
 	color.Cyan("[denomon] watching: %s", path)
 
-	watcher, err := fsnotify.NewWatcher()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer watcher.Close()
-
-	done := make(chan bool)
+	w := watcher.New()
+	w.IgnoreHiddenFiles(true)
 
 	go func() {
 		for {
 			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
+			case event := <-w.Event:
+				if hasMainFile {
+					repeat := build(mainFile)
 
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					if hasMainFile {
-						repeat := build(mainFile)
+					if repeat {
+						build(mainFile)
+					}
+				} else {
+					repeat := build(event.Path)
 
-						if repeat {
-							build(mainFile)
-						}
-					} else {
-						repeat := build(event.Name)
-
-						if repeat {
-							build(event.Name)
-						}
+					if repeat {
+						build(event.Path)
 					}
 				}
-			case _, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
+			case err := <-w.Error:
 				color.Red("[denomon] error: %s", err.Error())
-				os.Exit(1)
+			case <-w.Closed:
+				return
 			}
 		}
 	}()
 
-	if err = watcher.Add(path); err != nil {
+	if err := w.AddRecursive(path); err != nil {
 		color.Red("[denomon] error: %s", err.Error())
-		os.Exit(1)
 	}
-	<-done
+
+	if err := w.Start(time.Millisecond * 100); err != nil {
+		color.Red("[denomon] error: %s", err.Error())
+	}
 }

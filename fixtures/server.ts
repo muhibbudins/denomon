@@ -70,7 +70,7 @@ app.use(async (context, next) => {
 // Send static content
 app.use(async (context) => {
   await context.send({
-    root: `./static`,
+    root: `./fixtures/static`,
     index: "index.html",
   });
 });

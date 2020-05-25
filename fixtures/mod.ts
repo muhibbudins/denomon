@@ -1,4 +1,3 @@
-// sample
 console.log("Hello")
 
 const arr = [1, 2, 3]
