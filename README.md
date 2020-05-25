@@ -8,7 +8,7 @@ Simple watcher file for build an application using deno
 
 ### Installation
 
-Download Wget
+Download using Wget
 
 ```bash
 $ wget -O denomon https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
@@ -75,3 +75,8 @@ Refer to this [issue](https://github.com/fsnotify/fsnotify/issues/18), currently
 ### License
 
 This project is under MIT License
+
+### Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/muhibbudins/denomon.svg)](https://starchart.cc/muhibbudins/denomon)
+      
