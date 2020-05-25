@@ -8,27 +8,15 @@ Simple watcher file for build an application using deno
 
 ### Installation
 
-Download using Wget
+Install using Wget
 
 ```bash
-$ wget -O denomon https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
+$ wget -O - https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
 ```
 
 or, CURL
 ```bash
-$ curl -LJO https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
-```
-
-Move the denomon binary into **/usr/bin** or **/usr/local/bin**
-
-```bash
-$ sudo mv denomon /usr/local/bin
-```
-
-Make it executable
-
-```bash
-$ sudo chmod +x /usr/local/bin/denomon
+$ curl -s https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
 ```
 
 ### Usage
