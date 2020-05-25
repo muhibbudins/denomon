@@ -37,28 +37,58 @@ $ sudo chmod +x /usr/local/bin/denomon
 $ denomon <options> <file>
 ```
 
-Example
+Example:
+
+- Showing help message
 
 ```bash
-# spawn folder but direct to files with permission of net & read
-$ denomon --dir fixtures --allow net,read server.ts
-# spawn folder with permission of net & read
-$ denomon --dir fixtures --allow net,read
-# spawn file with permission of net
-$ denomon --allow net fixtures/server.ts
-# spawn file without any permission
-$ denomon fixtures/mod.ts
+denomon --help
 ```
+
+- Single command to spawn current folder (but not recursively [see limitation](https://github.com/muhibbudins/denomon#limitations).)
+
+```bash
+$ denomon
+```
+
+- Spawn file with permission [see note below]
+
+```bash
+$ denomon --allow net,read server.ts
+```
+
+- Spawn file with specific folder and permission [see note below]
+
+```bash
+$ denomon --dir fixtures --allow net,read server.ts
+```
+
+- Spawn specific folder with permission
+
+```bash
+$ denomon --dir fixtures --allow net,read
+```
+
+> Note : If you set denomon to spawn single file, all changes at root folder will trigger reload on main file.
+
 
 ### Options
 
+#### --version
+
+Showing denomon version
+
+#### --help
+
+Print this help message
+
 #### --dir
 
-To set target directory
+Assign directory to watch
 
 #### --allow
 
-To set allowed permission, comma sepearated
+Assign permission for the files
 
 ### Features
 

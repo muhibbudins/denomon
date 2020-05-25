@@ -70,7 +70,7 @@ app.use(async (context, next) => {
 // Send static content
 app.use(async (context) => {
   await context.send({
-    root: `${Deno.cwd()}/fixtures/static`,
+    root: `./static`,
     index: "index.html",
   });
 });

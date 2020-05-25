@@ -19,12 +19,15 @@ var args []string
 var file string = ""
 var path string = ""
 var permission []string
+var hasMainFile bool = false
+var mainFile string = ""
 
 func help() {
 	fmt.Printf("[DENOMON HELP]\n\n")
 	fmt.Printf("Usage:\n\n")
 	fmt.Printf("denomon <options> <file>\n\n")
 	fmt.Printf("Options:\n\n")
+	fmt.Printf("--version Showing denomon version\n")
 	fmt.Printf("--help Print this help message\n")
 	fmt.Printf("--dir Assign directory to watch\n")
 	fmt.Printf("--allow Assign permission for the files\n\n")
@@ -74,9 +77,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dirPtr := flag.String("dir", ".", "Assign directory to watch")
+	dirPtr := flag.String("dir", "", "Assign directory to watch")
 	helpPtr := flag.Bool("help", false, "Print this help message")
 	allowPtr := flag.String("allow", "", "Assign permission for the files")
+	versionPtr := flag.Bool("version", false, "Showing denomon version")
 
 	flag.Parse()
 
@@ -92,7 +96,12 @@ func main() {
 
 	args = flag.Args()
 
-	if (len(args) == 0 && *dirPtr == ".") || *helpPtr == true {
+	if *versionPtr == true {
+		color.Green("[denomon] version %s", "0.1.0")
+		return
+	}
+
+	if *helpPtr == true {
 		help()
 		return
 	}
@@ -101,11 +110,17 @@ func main() {
 		file = args[0]
 	}
 
+	path = dir + "/"
+
+	if *dirPtr != "" {
+		path = dir + "/" + *dirPtr + "/"
+	}
+
 	if file != "" {
-		path = dir + "/" + *dirPtr + "/" + file
-		build(path)
-	} else {
-		path = dir + "/" + *dirPtr
+		hasMainFile = true
+		mainFile = path + file
+
+		build(mainFile)
 	}
 
 	color.Cyan("[denomon] watching: %s", path)
@@ -128,10 +143,18 @@ func main() {
 				}
 
 				if event.Op&fsnotify.Write == fsnotify.Write {
-					repeat := build(event.Name)
+					if hasMainFile {
+						repeat := build(mainFile)
 
-					if repeat {
-						build(event.Name)
+						if repeat {
+							build(mainFile)
+						}
+					} else {
+						repeat := build(event.Name)
+
+						if repeat {
+							build(event.Name)
+						}
 					}
 				}
 			case _, ok := <-watcher.Errors:
