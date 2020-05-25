@@ -11,12 +11,12 @@ Simple watcher file for build an application using deno
 Download using Wget
 
 ```bash
-$ wget -O denomon https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
+$ wget -O denomon https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
 ```
 
 or, CURL
 ```bash
-$ curl -LJO https://raw.githubusercontent.com/muhibbudins/denomon/master/denomon
+$ curl -LJO https://raw.githubusercontent.com/muhibbudins/denomon/master/install.sh | sh
 ```
 
 Move the denomon binary into **/usr/bin** or **/usr/local/bin**
