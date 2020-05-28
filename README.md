@@ -1,5 +1,7 @@
 # Denomon
 
+## Also read in [Portuguese](https://github.com/muhibbudins/denomon/blob/master/README-pt-BR.md) 
+
 Simple watcher file for build an application using deno
 
 [![asciicast](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy.png)](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy)
