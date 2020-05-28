@@ -4,7 +4,7 @@ set -e
 
 INSTALL_DIR="/usr/local/bin/"
 FILENAME=""
-RELEASE="0.1.2"
+RELEASE="0.1.3"
 
 flags() {
   while [[ $# -gt 0 ]]; do

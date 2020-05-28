@@ -34,7 +34,19 @@ func help() {
 	fmt.Printf("--allow Assign permission for the files\n\n")
 }
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func build(file string) bool {
+	if !fileExists(file) {
+		return false
+	}
+
 	color.Green("[denomon] build: %s", file)
 
 	if pid > 0 {
@@ -114,7 +126,7 @@ func main() {
 	args = flag.Args()
 
 	if *versionPtr == true {
-		color.Green("[denomon] version %s", "0.1.2")
+		color.Green("[denomon] version %s", "0.1.3")
 		return
 	}
 
@@ -149,17 +161,19 @@ func main() {
 		for {
 			select {
 			case event := <-w.Event:
-				if isMainFile {
-					repeat := build(mainFile)
+				if !event.IsDir() {
+					if isMainFile {
+						repeat := build(mainFile)
 
-					if repeat {
-						build(mainFile)
-					}
-				} else {
-					repeat := build(event.Path)
+						if repeat {
+							build(mainFile)
+						}
+					} else {
+						repeat := build(event.Path)
 
-					if repeat {
-						build(event.Path)
+						if repeat {
+							build(event.Path)
+						}
 					}
 				}
 			case err := <-w.Error:
