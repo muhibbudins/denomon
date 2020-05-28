@@ -80,6 +80,10 @@ Atribui um diretório para observar
 
 Atribui permissões para seu projeto
 
+#### --unstable
+
+Atribuir instável para seu projeto
+
 ### Funcionalidades
 
 - Automaticamente compila para um único arquivo
