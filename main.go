@@ -19,8 +19,9 @@ var args []string
 var file string = ""
 var path string = ""
 var permission []string
-var hasMainFile bool = false
 var mainFile string = ""
+var isMainFile bool = false
+var isUnstable bool = false
 
 func help() {
 	fmt.Printf("[DENOMON HELP]\n\n")
@@ -42,10 +43,21 @@ func build(file string) bool {
 
 	var stderr bytes.Buffer
 
-	options := []string{"run", file}
+	options := []string{"run"}
+
+	if isUnstable {
+		options = append(options, "--unstable")
+	}
+
+	options = append(options, file)
 
 	if len(permission) > 0 {
 		options = []string{"run"}
+
+		if isUnstable {
+			options = append(options, "--unstable")
+		}
+
 		for i := 0; i < len(permission); i++ {
 			options = append(options, "--allow-"+permission[i])
 		}
@@ -81,8 +93,13 @@ func main() {
 	helpPtr := flag.Bool("help", false, "Print this help message")
 	allowPtr := flag.String("allow", "", "Assign permission for the files")
 	versionPtr := flag.Bool("version", false, "Showing denomon version")
+	unstablePtr := flag.Bool("unstable", false, "Assign unstable option for Deno")
 
 	flag.Parse()
+
+	if *unstablePtr {
+		isUnstable = true
+	}
 
 	if *allowPtr != "" {
 		allowSlice := strings.Split(*allowPtr, ",")
@@ -97,7 +114,7 @@ func main() {
 	args = flag.Args()
 
 	if *versionPtr == true {
-		color.Green("[denomon] version %s", "0.1.1")
+		color.Green("[denomon] version %s", "0.1.2")
 		return
 	}
 
@@ -117,7 +134,7 @@ func main() {
 	}
 
 	if file != "" {
-		hasMainFile = true
+		isMainFile = true
 		mainFile = path + file
 
 		build(mainFile)
@@ -132,7 +149,7 @@ func main() {
 		for {
 			select {
 			case event := <-w.Event:
-				if hasMainFile {
+				if isMainFile {
 					repeat := build(mainFile)
 
 					if repeat {

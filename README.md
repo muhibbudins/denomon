@@ -78,6 +78,10 @@ Assign directory to watch
 
 Assign permission for the files
 
+#### --unstable
+
+Assign unstable parameter to deno
+
 ### Features
 
 - Auto build for single file
