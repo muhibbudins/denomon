@@ -2,7 +2,7 @@
 
 ## Also read in [English](https://github.com/muhibbudins/denomon/blob/master/README.md) 
 
-Um observador de arquivos para construir aplicações usando Deno
+Um observador de arquivos para executar aplicações usando Deno
 
 [![asciicast](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy.png)](https://asciinema.org/a/kkoeCdKB5bKgCLY7XzHsmbFZy)
 
@@ -53,7 +53,7 @@ $ denomon --allow net,read server.ts
 $ denomon --dir fixtures --allow net,read server.ts
 ```
 
-- Inicialiar pasta específica com permissões
+- Inicialiar pasta específica com permissões de rede e leitura de arquivos
 
 ```bash
 $ denomon --dir fixtures --allow net,read
@@ -82,7 +82,7 @@ Atribui permissões para seu projeto
 
 #### --unstable
 
-Atribuir instável para seu projeto
+Atribuir parâmetro instável para o Deno permitindo uso de bibliotecas não estáveis
 
 ### Funcionalidades
 
